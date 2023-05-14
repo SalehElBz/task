@@ -10,11 +10,9 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
     {
         builder.HasOne<JobPosition>()
         .WithMany()
-        .HasForeignKey(fk => fk.JobPositionID)
-        .IsRequired();
+        .HasForeignKey(fk => fk.JobPositionID);
         builder.HasOne<UploadedFile>()
         .WithOne()
-        .HasForeignKey<ApplicationUser>(e => e.Id)
-        .IsRequired();
+        .HasForeignKey<UploadedFile>(e => e.Id);
     }
 }

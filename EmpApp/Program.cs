@@ -61,7 +61,7 @@ builder.Services.AddAuthentication(opt =>
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddCors(opt => opt.DefaultPolicyName = "corsPolicy");
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -89,13 +89,9 @@ app.Use(async (context, next) =>
     }
 });
 
-app.UseRouting();
 app.UseHttpsRedirection();
-app.UseCors(opt => opt.AllowAnyHeader()
-.AllowAnyMethod()
-.AllowCredentials()
-.WithOrigins("http://localhost:4200/", "https://localhost:4200/")
-);
+app.UseRouting();
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.UseAuthentication();
 app.UseAuthorization();
 

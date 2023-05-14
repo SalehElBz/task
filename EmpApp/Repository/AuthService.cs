@@ -92,6 +92,8 @@ public class AuthService : IAuthService
 
     public async Task<AuthModel> RegisterAsync(RegisterModel model)
     {
+        await CreateAdmin();
+        await CreateRoles();
         if (await _userManager.FindByEmailAsync(model.Email) is not null)
             return new AuthModel { Message = "Email is already registered!" };
         if (await _userManager.FindByNameAsync(model.UserName) is not null)

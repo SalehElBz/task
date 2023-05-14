@@ -3,14 +3,13 @@ using EmpApp.Models;
 using EmpApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using EmpApp.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Cors;
 
 namespace EmpApp.Controllers;
 [ApiController]
-[EnableCors("corsPolicy")]
+// [EnableCors("corsPolicy")]
 [Authorize(Roles = "HR")]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
@@ -33,7 +32,7 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
     [AllowAnonymous]
-    [HttpGet("login")]
+    [HttpPost("login")]
     public async Task<IActionResult> Login(LoginModel model)
     {
         if (!ModelState.IsValid)
@@ -82,13 +81,7 @@ public class AuthController : ControllerBase
     [Route("Logout")]
     public async Task<IActionResult> Logout()
     {
-        var authProperties = new AuthenticationProperties
-        {
-            AllowRefresh = true,
-            IsPersistent = true,
-            ExpiresUtc = DateTime.UtcNow.AddDays(10)
-        };
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme, authProperties);
+        await HttpContext.SignOutAsync();
         return Ok();
     }
     [HttpGet]
@@ -111,6 +104,7 @@ public class AuthController : ControllerBase
         return Ok(user);
     }
     [HttpGet("getusers")]
+    [AllowAnonymous]
     public async Task<IEnumerable<ApplicationUser>?> GetUsersAsync()
     {
         var users = await service.GetUsersAsync();
